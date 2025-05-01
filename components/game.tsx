@@ -9,6 +9,7 @@ import { Floor } from "./floor"
 import { Obstacle } from "./obstacle"
 import { ParentHands } from "./parent-hands"
 import { MissRachel } from "./miss-rachel"
+import { Background } from "./background"
 import { GameUI } from "./game-ui"
 
 export default function Game() {
@@ -63,6 +64,9 @@ export default function Game() {
 
         <OrthographicCamera makeDefault position={[0, 5, 10]} zoom={40} />
 
+        {/* Background */}
+        <Background />
+
         <Physics debug={false}>
           {/* Floor */}
           <Floor />
@@ -92,7 +96,7 @@ export default function Game() {
           ))}
 
           {/* Miss Rachel as the goal */}
-          <MissRachel position={[9, 2, 0] as [number, number, number]} />
+          <MissRachel position={[9, 2, 0] as const} />
 
           {/* Parent Hands */}
           {isLifted && <ParentHands position={[babyPosition.x, 3, 0]} />}
