@@ -8,7 +8,7 @@ import { Baby } from "./baby"
 import { Floor } from "./floor"
 import { Obstacle } from "./obstacle"
 import { ParentHands } from "./parent-hands"
-import { Playmat } from "./playmat"
+import { MissRachel } from "./miss-rachel"
 import { GameUI } from "./game-ui"
 
 export default function Game() {
@@ -48,9 +48,9 @@ export default function Game() {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [gameState, isLifted])
 
-  // Check for win condition
+  // Check for win condition - when baby gets close to Miss Rachel
   useEffect(() => {
-    if (babyPosition.x > 8 && gameState === "playing") {
+    if (babyPosition.x > 7 && gameState === "playing") {
       setGameState("won")
     }
   }, [babyPosition, gameState])
@@ -91,8 +91,8 @@ export default function Game() {
             />
           ))}
 
-          {/* Goal - Playmat */}
-          <Playmat position={[9, 0.1, 0]} />
+          {/* Miss Rachel as the goal */}
+          <MissRachel position={[9, 2, 0] as [number, number, number]} />
 
           {/* Parent Hands */}
           {isLifted && <ParentHands position={[babyPosition.x, 3, 0]} />}
@@ -106,8 +106,6 @@ export default function Game() {
       </Canvas>
 
       <GameUI gameState={gameState} obstacleHit={obstacleHit} onReset={resetGame} />
-
-      {/* Removed audio element since the file might not exist */}
     </>
   )
 }

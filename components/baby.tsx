@@ -21,6 +21,7 @@ export function Baby({ position, isLifted, gameState, onPositionChange }: BabyPr
   const [textureError, setTextureError] = useState(false)
   const [liftHeight, setLiftHeight] = useState(1.5)  // Initial lift height
   const [isUpPressed, setIsUpPressed] = useState(false)
+  const [stamina, setStamina] = useState(100) // Stamina from 0 to 100
 
   // Load the baby texture with error handling
   const textureLoader = new THREE.TextureLoader()
@@ -94,11 +95,16 @@ export function Baby({ position, isLifted, gameState, onPositionChange }: BabyPr
 
     // Handle lifting by parent
     if (isLifted) {
-      // If up arrow is pressed, increase height (with a maximum limit)
-      if (isUpPressed) {
-        setLiftHeight(prev => Math.min(prev + delta * 2, 4)) // Max height of 4 units, adjust speed with the '2' multiplier
+      // Only allow lifting if there's stamina
+      if (isUpPressed && stamina > 0) {
+        setLiftHeight(prev => Math.min(prev + delta * 2, 4))
+        setStamina(prev => Math.max(prev - delta * 50, 0)) // Decrease stamina while lifting
       } else {
-        setLiftHeight(prev => Math.max(prev - delta * 2, 1.5)) // Return to base height when up is released
+        setLiftHeight(prev => Math.max(prev - delta * 2, 1.5))
+        // Recharge stamina when not lifting
+        if (!isUpPressed) {
+          setStamina(prev => Math.min(prev + delta * 25, 100)) // Recharge at half the rate of depletion
+        }
       }
       rigidBodyRef.current.setTranslation({ x: position.x, y: liftHeight, z: position.z }, true)
       return
@@ -142,6 +148,17 @@ export function Baby({ position, isLifted, gameState, onPositionChange }: BabyPr
       name="baby"
     >
       <group position={[0, 0.25 + (direction !== "idle" ? bobHeight : 0), 0]}>
+        {/* Add stamina indicator above the baby */}
+        {isLifted && (
+          <mesh position={[0, 1.5, 0]} rotation={[0, 0, 0]}>
+            <planeGeometry args={[1, 0.1]} />
+            <meshBasicMaterial color={stamina > 30 ? "#00ff00" : "#ff0000"} />
+            <mesh position={[0.5 * (1 - stamina/100), 0, 0.01]} scale={[stamina/100, 1, 1]}>
+              <planeGeometry args={[1, 0.1]} />
+              <meshBasicMaterial color="#ffffff" />
+            </mesh>
+          </mesh>
+        )}
         {textureLoaded && babyTexture ? (
           // Use a plane with the baby texture if loaded
           <mesh rotation={[0, facingLeft ? Math.PI : 0, 0]}>
