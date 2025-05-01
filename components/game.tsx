@@ -27,9 +27,9 @@ export default function Game() {
 
   // Generate obstacles
   const obstacles = [
-    { id: "scissors", position: [-4, 0.3, 0], type: "scissors" },
+    { id: "scissors1", position: [-4, 0.3, 0], type: "scissors" },
     { id: "bottle", position: [0, 0.3, 0], type: "bottle" },
-    { id: "cord", position: [4, 0.3, 0], type: "cord" },
+    { id: "scissors2", position: [4, 0.3, 0], type: "scissors" },
   ]
 
   // Handle keyboard input
