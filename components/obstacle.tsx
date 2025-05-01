@@ -89,7 +89,7 @@ export function Obstacle({ id, position, type, onCollision }: ObstacleProps) {
   // Rotation for certain obstacles
   const getRotation = () => {
     // No special rotations needed for now
-    return [0, 0, 0]
+    return [0, 0, 0] as [number, number, number]
   }
 
   return (
@@ -111,7 +111,13 @@ export function Obstacle({ id, position, type, onCollision }: ObstacleProps) {
         // Use a plane with the texture if loaded successfully
         <mesh rotation={getRotation()}>
           <planeGeometry args={getSize().slice(0, 2) as [number, number]} />
-          <meshStandardMaterial map={texture} transparent={true} alphaTest={0.1} side={THREE.DoubleSide} />
+          <meshStandardMaterial 
+            map={texture} 
+            transparent={true} 
+            alphaTest={0.1} 
+            side={THREE.DoubleSide}
+            color="#ffffff"  
+          />
         </mesh>
       ) : (
         // Fallback to a colored box if texture failed to load
